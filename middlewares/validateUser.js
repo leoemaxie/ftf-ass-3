@@ -1,4 +1,3 @@
-// middlewares/validateUser.js
 function validateUser(req, res, next) {
   const { name, email, age } = req.body;
 
@@ -23,7 +22,6 @@ function validateUser(req, res, next) {
     });
   }
 
-  // All checks passed -- hand control to the next function
   next();
 }
 

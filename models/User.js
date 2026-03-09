@@ -1,4 +1,3 @@
-// models/User.js
 const mongoose = require('mongoose');
 const bcrypt   = require('bcryptjs');
 
@@ -21,7 +20,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Password is required'],
       minlength: [6, 'Password must be at least 6 characters'],
-      // We will NEVER store raw passwords -- only bcrypt hashes
     },
     age: {
       type: Number,
@@ -38,20 +36,12 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// ── Pre-save hook: hash password before saving to the database ──
-// This runs automatically every time a user document is saved.
-// 'isModified' ensures we only re-hash if the password field was changed.
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
-
-  // Salt rounds = 10 means bcrypt runs the hashing algorithm 2^10 times
-  // This makes brute-force attacks very slow and expensive
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 
-// Create and export the Model
-// 'User' becomes the collection name in MongoDB (stored as 'users')
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
